@@ -81,3 +81,52 @@ def run_epidemiological_pipeline():
     country_df.to_csv(output_csv_path, index=False)
     print(f"✅ Preprocessing pipeline complete. Standardized health database saved to: {output_csv_path}")
     return country_df
+
+# =====================================================================
+# PHASE 5: STATIC REPORT GENERATION
+# =====================================================================
+def generate_reporting_graphics(df):
+    """Generates high-resolution production charts visualizing viral trajectories."""
+    print("⏳ Rendering global health analytical graphics panels...")
+    
+    # --- Chart 1: Top 10 Heavily Impacted Countries Portfolio ---
+    latest_date = df['Date'].max()
+    latest_snapshot = df[df['Date'] == latest_date]
+    top_countries = latest_snapshot.sort_values(by='Confirmed', ascending=False).head(10)
+    
+    plt.figure()
+    sns.barplot(x='Confirmed', y='Country/Region', data=top_countries, palette='Reds_r')
+    plt.title(f"Global Scale: Top 10 Heavily Impacted Countries by Cumulative Volume ({latest_date.strftime('%Y-%m-%d')})", fontweight='bold')
+    plt.xlabel('Cumulative Confirmed Cases (Millions)')
+    plt.ylabel('Country / Region')
+    plt.tight_layout()
+    plt.savefig(os.path.join(OUTPUTS_DIR, "global_volume_rankings.png"), dpi=300)
+    plt.close()
+
+    # --- Chart 2: Global Progression Velocity (Aggregate Wave) ---
+    global_time = df.groupby('Date')[['Confirmed', 'Deaths', 'Smoothed_New_Cases']].sum().reset_index()
+    
+    fig, ax1 = plt.subplots()
+    ax2 = ax1.twinx()
+    
+    ax1.plot(global_time['Date'], global_time['Confirmed'] / 1e6, color='#0073e6', linewidth=2, label='Cumulative Confirmed')
+    ax2.fill_between(global_time['Date'], 0, global_time['Smoothed_New_Cases'], color='#ff9900', alpha=0.3, label='7-Day Smooth New Cases')
+    
+    ax1.set_xlabel('Timeline Horizon')
+    ax1.set_ylabel('Total Cumulative Cases (Millions)', color='#0073e6')
+    ax2.set_ylabel('New Smoothed Daily Additions', color='#ff9900')
+    plt.title("Global Outbreak Velocity Scale & Wave Distribution Profile", fontweight='bold')
+    plt.tight_layout()
+    plt.savefig(os.path.join(OUTPUTS_DIR, "global_transmission_velocity.png"), dpi=300)
+    plt.close()
+
+    print(f"✅ Pipeline graphics written directly inside: {OUTPUTS_DIR}")
+
+# =====================================================================
+# SYSTEM MAIN ENTRY POINT
+# =====================================================================
+if __name__ == "__main__":
+    initialize_workspace()
+    processed_health_data = run_epidemiological_pipeline()
+    generate_reporting_graphics(processed_health_data)
+    print("🎉 Complete epidemiological preprocessing pipeline executed flawlessly!")
