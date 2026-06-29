@@ -22,3 +22,38 @@ This repository contains an automated epidemiological data pipeline and visualiz
 │   ├── global_volume_rankings.png         # Chart: Pareto tracking of country-level distributions
 │   └── global_transmission_velocity.png   # Chart: Dual-axis tracking of cumulative growth waves
 └── requirements.txt                       # Explicit system dependency specifications
+
+
+## ⚙️ Quantitative Epidemiological Formulations
+Raw reporting sequences only provide total historical sums. This architecture processes raw data into standard epidemiological indicators:
+
+* **Daily Outbreak Velocity Vector ($\Delta C_t$):** Extracts the daily change rate to isolate current transmission velocity profiles:
+  $$\Delta C_t = C_t - C_{t-1}$$
+
+* **Case Fatality Rate Benchmark ($CFR_t$):** Calculates viral severity and measures localized healthcare system stress as a percentage ratio metric:
+  $$\text{CFR}_t = \left( \frac{\text{Deaths}_t}{\text{Confirmed}_t} \right) \times 100$$
+
+* **Smoothed Transmission Signals ($\text{SMA}_7$):** Calculates a 7-day rolling arithmetic mean to smooth out weekly reporting discrepancies and reveal true transmission waves:
+  $$\text{Smoothed Cases} = \frac{1}{7} \sum_{i=0}^{6} \Delta C_{t-i}$$
+
+---
+
+## 📊 Strategic Business Observations
+1. **The Reporting Drop Anomaly:** Plotting raw daily changes discloses a regular 7-day drop cycle that corresponds to drop-offs in weekend laboratory data processing. This makes rolling window averages necessary to prevent misinterpreting reporting drops as a drop in transmission velocity.
+2. **CFR Divergence Drivers:** Cross-analyzing total volumes alongside the Case Fatality Rate reveals significant performance differences between regional healthcare systems. Higher spikes in localized CFR scores provide an analytical indicator that alerts operations managers to structural system bottlenecks or shifts in viral severity.
+
+---
+
+## 🚀 Environment Quickstart & Execution
+
+### 1. Initialize System Dependencies
+```bash
+git clone [https://github.com/indra-swe/covid-data-analysis.git](https://github.com/indra-swe/covid-data-analysis.git)
+cd covid-data-analysis
+pip install -r requirements.txt
+
+### 2. Trigger Data Retrieval & Core Analytics
+python notebooks/covid_pipeline.py
+
+### 3. Launch the Deployed Portal Console
+streamlit run notebooks/app.py
