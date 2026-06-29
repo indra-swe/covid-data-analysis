@@ -22,7 +22,7 @@ This repository contains an automated epidemiological data pipeline and visualiz
 │   ├── global_volume_rankings.png         # Chart: Pareto tracking of country-level distributions
 │   └── global_transmission_velocity.png   # Chart: Dual-axis tracking of cumulative growth waves
 └── requirements.txt                       # Explicit system dependency specifications
-
+```
 
 ## ⚙️ Quantitative Epidemiological Formulations
 Raw reporting sequences only provide total historical sums. This architecture processes raw data into standard epidemiological indicators:
@@ -51,9 +51,12 @@ Raw reporting sequences only provide total historical sums. This architecture pr
 git clone [https://github.com/indra-swe/covid-data-analysis.git](https://github.com/indra-swe/covid-data-analysis.git)
 cd covid-data-analysis
 pip install -r requirements.txt
-
+```
 ### 2. Trigger Data Retrieval & Core Analytics
+```bash
 python notebooks/covid_pipeline.py
-
+```
 ### 3. Launch the Deployed Portal Console
+```bash
 streamlit run notebooks/app.py
+```
