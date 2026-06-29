@@ -36,3 +36,12 @@ def load_workspace_data():
 
 df = load_workspace_data()
 
+# =====================================================================
+# SIDEBAR GEOGRAPHIC CONTROL PANELS
+# =====================================================================
+st.sidebar.header("🕹️ Geographic Filters")
+selected_country = st.sidebar.selectbox("Select Target Country / Region:", sorted(df['Country/Region'].unique()), index=sorted(df['Country/Region'].unique()).index('US') if 'US' in df['Country/Region'].unique() else 0)
+
+# Filter dataset to match active geographic selections
+country_filtered = df[df['Country/Region'] == selected_country].sort_values(by='Date')
+
